@@ -1,0 +1,27 @@
+kaptcha:
+  # 设置字体大小
+  textproducer:
+    font:
+      size: 30
+    # 设置验证码长度
+    char:
+      length: 5
+  # 设置边框
+  border:
+    # 边框颜色
+    color: blue
+  image:
+    # 设置宽度
+    width: 120
+    height: 40
+  items:
+    # admin captcha
+    admin:
+      path: /admin/captcha
+      session:
+        key: ADMIN_KAPTCHA_SESSION_KEY
+        date: ADMIN_KAPTCHA_SESSION_DATE
+
+spring:
+  profiles:
+    active: prod

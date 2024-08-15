@@ -1,0 +1,73 @@
+html, body {
+    background-color: #f1f5f9;
+}
+
+.container-login {
+    margin: 240px auto;
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-dialog {
+    width: 400px;
+    height: 400px;
+    padding-top: 20px;
+    border-radius: 10px;
+    border: 1px gray solid;
+    background-color: white;
+}
+
+.login-dialog h3 {
+    text-align: center;
+}
+
+.login-dialog .row {
+    width: 300px;
+    height: 40px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-dialog .row > input {
+    width: 220px;
+    height: 35px;
+    border: gray solid 1px;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 10px;
+}
+
+.login-dialog button {
+    width: 300px;
+    color: white;
+    border: none;
+    margin-top: 30px;
+}
+
+.btn-register {
+    height: 45px;
+    background-color: orange;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-register:hover {
+    background-color: darkorange;
+}
+
+.btn-login {
+    height: 45px;
+    background-color: rgb(0, 157, 255);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background-color: rgb(24, 117, 198);
+}

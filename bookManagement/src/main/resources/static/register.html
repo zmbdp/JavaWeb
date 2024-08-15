@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/register.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="container-login">
+        <div class="container-pic">
+            <img src="pic/computer.png" width="350px">
+        </div>
+        <div class="login-dialog">
+            <h3>注册</h3>
+            <div class="row">
+                <span>用户名</span>
+                <input type="text" name="userName" id="userName" class="form-control">
+            </div>
+            <div class="row">
+                <span>密码</span>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <div class="row">
+                <span>确认密码</span>
+                <input type="password" name="confirmPassword" id="confirmPassword" class="form-control">
+            </div>
+            <div class="row">
+                <span>验证码</span>
+                <input type="text" name="captcha" id="captcha" class="form-control">
+                <img class="verificationCodeImg" src="/admin/captcha" title="看不清？点我逝逝" onclick="this.src='/admin/captcha?'+Math.random();"/>
+            </div>
+
+            <div class="row">
+                <button type="button" class="btn btn-info btn-lg" onclick="register()">注册</button>
+            </div>
+
+            <div class="row">
+                <button type="button" class="btn btn-login btn-lg" onclick="goToLogin()">返回登录</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script>
+        function register() {
+            var password = $("#password").val();
+            var confirmPassword = $("#confirmPassword").val();
+            if (password !== confirmPassword) {
+                alert("密码和确认密码不一致！");
+                return;
+            }
+            $.ajax({
+                url: "/user/register",
+                type: "post",
+                data: {
+                    "userName": $("#userName").val(),
+                    "password": password,
+                    "captcha": $("#captcha").val()
+                },
+                success: function (result) {
+                    if (result != null && result.code == "SUCCESS" && result.data == true ) {
+                        alert("注册成功！");
+                        location.href = "login.html";
+                    } else {
+                        alert("注册失败，用户名存在或验证码错误！");
+                    }
+                }
+            });
+        }
+
+        function goToLogin() {
+            location.href = "login.html";
+        }
+    </script>
+</body>
+
+</html>
