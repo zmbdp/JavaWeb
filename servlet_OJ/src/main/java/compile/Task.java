@@ -4,6 +4,8 @@ import utils.CommandUtil;
 import utils.FileUtil;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Task {
@@ -50,6 +52,13 @@ public class Task {
         //      运行程序的时候，会获取到标准输出和标准错误，然后会写入到 stdout.txt 和 stderr.txt
         // 4. 父进程获取刚才编译执行的结果，并打包成 compile.Answer 对象返回给 controller
 
+        // 执行安全判断
+        if (!checkCodeSafe(question.getCode())) {
+            System.out.println("用户提交了不安全的代码!");
+            answer.setError(3);
+            answer.setReason("您提交的代码可能会危害到服务器, 禁止运行!");
+            return answer;
+        }
         // 然后再把这个 compile.Question 的 code 给写入到 CODE_POW 这个文件中
         FileUtil.writeFile(CODE_FILE, question.getCode());
 
@@ -85,5 +94,26 @@ public class Task {
         answer.setError(0);
         answer.setStdout(FileUtil.readFile(STDOUT));
         return answer;
+    }
+
+    // 检测黑名单的
+    private boolean checkCodeSafe(String code) {
+        List<String> blackList = new ArrayList<>();
+        // 防止提交的代码运行恶意程序
+        blackList.add("Runtime");
+        blackList.add("exec");
+        // 禁止提交的代码读写文件
+        blackList.add("java.io");
+        // 禁止提交的代码访问网络
+        blackList.add("java.net");
+
+        for (String target : blackList) {
+            int pos = code.indexOf(target);
+            if (pos >= 0) {
+                // 找到任意的恶意代码特征, 返回 false 表示不安全
+                return false;
+            }
+        }
+        return true;
     }
 }
