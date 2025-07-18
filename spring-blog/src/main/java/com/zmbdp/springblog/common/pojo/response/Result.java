@@ -1,6 +1,6 @@
-package com.zmbdp.springblog.model;
+package com.zmbdp.springblog.common.pojo.response;
 
-import com.zmbdp.springblog.common.Constants;
+import com.zmbdp.springblog.common.enums.ResultCodeEnum;
 import lombok.Data;
 
 @Data
@@ -11,22 +11,21 @@ public class Result<T> {
 
     public static <T> Result <T> success(T data) {
         Result result = new Result<>();
-        result.setCode(Constants.RESULT_SUCCESS);
-        result.setErrorMsg("");
+        result.setCode(ResultCodeEnum.SUCCESS.getCode());
         result.setData(data);
         return result;
     }
 
     public static <T> Result <T> fail(String errorMsg) {
         Result result = new Result<>();
-        result.setCode(Constants.RESULT_FAIL);
+        result.setCode(ResultCodeEnum.FAIL.getCode());
         result.setErrorMsg(errorMsg);
         return result;
     }
 
     public static <T> Result <T> fail(String errorMsg, T data) {
         Result result = new Result<>();
-        result.setCode(Constants.RESULT_FAIL);
+        result.setCode(ResultCodeEnum.FAIL.getCode());
         result.setErrorMsg(errorMsg);
         result.setData(data);
         return result;

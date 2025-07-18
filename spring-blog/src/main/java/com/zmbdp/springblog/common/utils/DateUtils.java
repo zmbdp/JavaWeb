@@ -1,4 +1,4 @@
-package com.zmbdp.springblog.utils;
+package com.zmbdp.springblog.common.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

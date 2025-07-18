@@ -1,7 +1,7 @@
-package com.zmbdp.springblog.config;
+package com.zmbdp.springblog.common.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zmbdp.springblog.model.Result;
+import com.zmbdp.springblog.common.pojo.response.Result;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ public class ResponseAdvice implements ResponseBodyAdvice {
     @Override
     @SneakyThrows
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
-        if (body instanceof Result) {
+        if (body instanceof Result<?>) {
             return body;
         }
         if (body instanceof String) {

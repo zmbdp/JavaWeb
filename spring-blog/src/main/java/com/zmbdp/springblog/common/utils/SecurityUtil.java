@@ -1,14 +1,14 @@
-package com.zmbdp.springblog.utils;
+package com.zmbdp.springblog.common.utils;
 
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 
 // 使用加密的方式
-public class SecurityUtils {
+public class SecurityUtil {
     /**
      * 加密
-     *
      * @param password 明文密码
      * @return 盐值+密文
      */
@@ -23,17 +23,20 @@ public class SecurityUtils {
 
     /**
      * 校验
-     *
-     * @param inputPassword
-     * @param sqlPassword
-     * @return
+     * @param inputPassword 输入的密码
+     * @param sqlPassword 数据库中的密码
+     * @return 校验结果
      */
     public static boolean verify(String inputPassword, String sqlPassword) {
-        //取出盐值
-        if (sqlPassword == null || sqlPassword.length() != 64) {
+        //非空校验
+        if (!StringUtils.hasLength(inputPassword) || !StringUtils.hasLength(sqlPassword)){
             return false;
         }
-        // 拿到前面的
+        //取出盐值
+        if (sqlPassword.length() != 64) {
+            return false;
+        }
+        // 拿到前面的 32 位盐值
         String salt = sqlPassword.substring(0, 32);
         // 进行加密
         String securityPassword = DigestUtils.md5DigestAsHex(inputPassword.getBytes());

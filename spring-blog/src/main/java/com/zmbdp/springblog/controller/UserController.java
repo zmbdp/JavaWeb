@@ -1,20 +1,20 @@
 package com.zmbdp.springblog.controller;
 
-import com.zmbdp.springblog.model.Result;
-import com.zmbdp.springblog.model.UserInfo;
+import com.zmbdp.springblog.common.pojo.request.UserInfoRequest;
+import com.zmbdp.springblog.common.pojo.dataobject.UserInfo;
+import com.zmbdp.springblog.common.pojo.response.UserInfoResponse;
+import com.zmbdp.springblog.common.pojo.response.UserLoginResponse;
 import com.zmbdp.springblog.service.UserService;
-import com.zmbdp.springblog.utils.JwtUtils;
-import com.zmbdp.springblog.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
 @RestController
@@ -24,78 +24,48 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
     /**
-     * 登录
-     * @param userName
-     * @param password
-     * @param captcha
-     * @return
+     * 用户登录，返回 token
+     * @param user 用户信息
+     * @param captcha 验证码
+     * @param session  session
+     * @return  token
      */
     @RequestMapping("/login")
-    public Result login(String userName, String password, String captcha, HttpSession session) {
-        /**
-         * 1. 参数校验
-         * 2. 密码、验证码校验
-         * 3. 生成 token 返回给前端
-         */
-        if (!StringUtils.hasLength(userName) || !StringUtils.hasLength(password)) {
-            return Result.fail("用户名或密码不可为空");
-        }
-        // 从数据库里面拿到密码
-        UserInfo userInfo = userService.getUserByName(userName);
-        if (userInfo == null) {
-            return Result.fail("用户名或密码错误");
-        }
-        // 先得到加密后的密码
-        // 拿到数据库里面的密码
-        String sqlPassword = userInfo.getPassword();
-        if (
-                userInfo.getId() < 1 ||
-                !SecurityUtils.verify(password, sqlPassword)// 校验密码
-        ) {
-            return Result.fail("用户名或密码错误");
-        }
-        if (!userService.check(captcha, session)) {
-            return Result.fail("验证码错误，请重试");
-        }
-        // 生成 token
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", userInfo.getId());
-        map.put("name", userInfo.getUserName());
-        String token = JwtUtils.getToken(map);
-        return Result.success(token);
-    }
-
-    @RequestMapping("/getUserInfo")
-    public UserInfo getUserInfo(HttpServletRequest request) {
-        String token = request.getHeader("user_token");
-        Integer userId = JwtUtils.getUserIdToken(token);
-        if (userId == null || userId < 1) {
-            return null;
-        }
-        return userService.getUserByUserId(userId);
+    public UserLoginResponse login(@Validated @RequestBody UserInfoRequest user, String captcha, HttpSession session) {
+        log.info("用户登录, userName: {}", user.getUserName());
+        return userService.login(user, captcha, session);
     }
 
     /**
-     * 通过用户 id 获取用户信息
-     * @param blogId
-     * @return
+     * 根据用户 id 查询用户信息
+     * @param userId 用户 id
+     * @return 用户信息
+     */
+    @RequestMapping("/getUserInfo")
+    public UserInfoResponse getUserInfo(@NotNull Integer userId){
+        return userService.getUserInfo(userId);
+    }
+
+    /**
+     * 通过博客 id 获取用户信息
+     * @param blogId 博客 id
+     * @return 用户信息
      */
     @RequestMapping("/getAuthorInfo")
-    public UserInfo getAuthorInfo(Integer blogId) {
+    public UserInfoResponse getAuthorInfo(@NotNull Integer blogId){
         if (blogId < 1) {
             return null;
         }
-        return userService.getAuthorInfo(blogId);
+        return userService.selectAuthorInfoByBlogId(blogId);
     }
 
     /**
      * 注册
-     * @param userInfo
-     * @param captcha
-     * @param session
-     * @return
+     * @param userInfo 用户信息
+     * @param captcha 验证码
+     * @param session  session
+     * @return 注册结果
      */
     @RequestMapping("/register")
     public Boolean register(UserInfo userInfo, String captcha, HttpSession session) {

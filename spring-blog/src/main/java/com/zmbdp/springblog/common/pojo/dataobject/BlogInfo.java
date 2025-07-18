@@ -1,12 +1,14 @@
-package com.zmbdp.springblog.model;
+package com.zmbdp.springblog.common.pojo.dataobject;
 
-import com.zmbdp.springblog.utils.DateUtils;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
 public class BlogInfo {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     // 标题
     private String title;
@@ -16,9 +18,4 @@ public class BlogInfo {
     private Integer deleteFlag;
     private Date createTime;
     private Date updateTime;
-    private boolean isLoginUser;
-
-    public String getUpdateTime() {
-        return DateUtils.formatDate(updateTime);
-    }
 }
