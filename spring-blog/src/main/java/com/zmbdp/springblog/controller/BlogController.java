@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -39,7 +38,7 @@ public class BlogController {
      * @return 博客
      */
     @RequestMapping("/getBlogDetail")
-    public BlogInfoResponse getBlogDetail(@NotNull Integer blogId, HttpServletRequest request) {
+    public BlogInfoResponse getBlogDetail(@NotNull Integer blogId) {
         log.info("getBlogDetail, blogId: {}", blogId);
         return blogService.getBlogDetail(blogId);
     }
